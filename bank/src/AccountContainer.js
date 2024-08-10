@@ -1,39 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import TransactionList from './components/TransactionList';
-import TransactionForm from './components/TransactionForm';
-import SearchBar from './components/SearchBar';
+import React, { useState, useEffect } from "react";
 
-const AccountContainer = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+function AccountContainer(){
+    const [records, setRecords]=useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:8001/transactions")
-      .then(response => response.json())
-      .then(data => setTransactions(data))
-      .catch(err => console.error(err));
-  }, []);
-
-  const addTransaction = (transaction) => {
-    setTransactions([...transactions, transaction]);
-  };
-
-  const deleteTransaction = (id) => {
-    setTransactions(transactions.filter(transaction => transaction.id !== id));
-  };
-
-  const filteredTransactions = transactions.filter(transaction =>
-    transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  return (
-    <div>
-      <h1>Bank Transaction App</h1>
-      <SearchBar searchTerm={searchTerm} onSearch={setSearchTerm} />
-      <TransactionForm onAdd={addTransaction} />
-      <TransactionList transactions={filteredTransactions} onDelete={deleteTransaction} />
-    </div>
-  );
-};
-
+    useEffect(()=>{
+        fetch("http://localhost:8001/transactions")
+        .then(response=>response.json())
+        .then(data=>setRecords(data))
+        .catch(err=>console.log(err));
+    }
+)
+return(
+<div>
+    <ul>
+        {records.map((record,index)=>(
+            <li key={index}>
+                {record.id}{record.name}
+            </li>
+        ))}
+    </ul>
+</div>
+)}
 export default AccountContainer;
